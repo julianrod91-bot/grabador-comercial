@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grabador de Acuerdos - El Libertador</title>
+    <title>Grabador de Reuniones - El Libertador</title>
     <style>
         :root {
             --color-primario: #008B47; /* Verde Seguros Bolívar */
-            --color-secundario: #FFD44D; /* Amarillo */
+            --color-secundario: #FFD44D; /* Amarillo El Libertador */
             --color-fondo: #f4f7f6;
             --color-texto: #333;
         }
@@ -142,13 +142,14 @@
 <body>
 
     <div class="contenedor">
-        <h1>Grabador de Acuerdos</h1>
+        <h1>Grabador de Reuniones</h1>
         <p>Herramienta optimizada para Gemini</p>
 
         <div class="consentimiento">
             <label>
                 <input type="checkbox" id="checkConsentimiento">
-                <span><strong>Aviso Legal:</strong> Confirmo que he informado al cliente que esta llamada está siendo grabada para fines de calidad y transcripción de acuerdos comerciales.</span>
+                <div>Aviso Legal: Confirmo que he obtenido el consentimiento del cliente para grabar esta reunión presencial y conversación para fines de calidad y transcripción de acuerdos.
+                <br><br><span style="font-size: 0.8rem; color: #666;">Ejemplo comercial de solicitud: "¿Me permitiría grabar esta conversación para asegurarnos de capturar todos los acuerdos y pendientes que tengamos para su transcripción?"</span></div>
             </label>
         </div>
 
@@ -262,7 +263,7 @@
         function crearElementoDescarga(blob) {
             const url = URL.createObjectURL(blob);
             const fecha = new Date();
-            const nombreArchivo = `Acuerdo_Comercial_${fecha.getDate()}-${fecha.getMonth()+1}_${fecha.getHours()}-${fecha.getMinutes()}.webm`;
+            const nombreArchivo = `Reunion_Comercial_${fecha.getDate()}-${fecha.getMonth()+1}_${fecha.getHours()}-${fecha.getMinutes()}.webm`;
 
             const item = document.createElement('div');
             item.className = 'item-grabacion';
