@@ -3,332 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grabador de Reuniones | El Libertador</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Grabador de Acuerdos - El Libertador</title>
     <style>
-        .pulse { animation: pulse-animation 2s infinite; }
-        @keyframes pulse-animation {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        :root {
+            --color-primario: #008B47; /* Verde Seguros Bolívar */
+            --color-secundario: #FFD44D; /* Amarillo */
+            --color-fondo: #f4f7f6;
+            --color-texto: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .contenedor {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            border-top: 5px solid var(--color-primario);
+        }
+
+        h1 {
+            color: var(--color-primario);
+            margin-bottom: 5px;
+        }
+
+        .consentimiento {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--color-secundario);
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.9rem;
+            border-radius: 4px;
+        }
+
+        .consentimiento label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .controles {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #btnGrabar {
+            background-color: var(--color-primario);
+            color: white;
+        }
+
+        #btnGrabar:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #btnDetener {
+            background-color: #e53935;
+            color: white;
+            display: none;
+        }
+
+        .tiempo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--color-primario);
+            margin: 10px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .lista-grabaciones {
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .item-grabacion {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-descargar {
+            background-color: var(--color-secundario);
+            color: #333;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .estado-grabando {
+            color: #e53935;
+            font-weight: bold;
+            animation: parpadeo 1.5s infinite;
+            display: none;
+        }
+
+        @keyframes parpadeo {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-800 p-6 font-sans">
-    <div class="max-w-3xl mx-auto space-y-6">
-        
-        <!-- Encabezado Corporativo -->
-        <div class="text-center space-y-2 mb-8">
-            <h1 class="text-3xl font-bold text-[#008B47] flex items-center justify-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-                Grabador de Reuniones
-            </h1>
-            <p class="text-slate-500 font-medium">Herramienta oficial para asesores comerciales</p>
-        </div>
+<body>
 
-        <!-- Guía para el Comercial -->
-        <div class="bg-white rounded-xl shadow-sm border border-[#FFD44D]/50 border-l-4 border-l-[#FFD44D] p-5">
-            <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="text-[#FFD44D]" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/></svg>
-                Recomendaciones para una grabación exitosa
-            </h3>
-            <ul class="space-y-3 text-sm text-slate-600">
-                <li class="flex items-start gap-2">
-                    <span class="text-[#008B47] mt-0.5 font-bold">•</span>
-                    <span><strong>Contexto inicial:</strong> Al empezar a grabar, di en voz alta la fecha de hoy, tu nombre y el objetivo de la reunión. (Ej: <em>"Hoy es 6 de abril, soy [Tu Nombre] en reunión con [Nombre del Cliente] para revisar su solicitud..."</em>).</span>
-                </li>
-                <li class="flex items-start gap-2">
-                    <span class="text-[#008B47] mt-0.5 font-bold">•</span>
-                    <span><strong>Posición del dispositivo:</strong> Ubica tu computador o teléfono cerca al centro de la mesa. Esto ayudará a que la Inteligencia Artificial separe correctamente las voces de todos los participantes.</span>
-                </li>
-            </ul>
-        </div>
+    <div class="contenedor">
+        <h1>Grabador de Acuerdos</h1>
+        <p>Herramienta optimizada para Gemini</p>
 
-        <!-- Confirmación de Consentimiento (Obligatorio) -->
-        <div class="bg-[#008B47]/5 border border-[#008B47]/20 rounded-xl p-4 transition-colors" id="consentCard">
-            <label class="flex items-start gap-3 cursor-pointer">
-                <input type="checkbox" id="consentCheckbox" class="mt-1 w-5 h-5 accent-[#008B47] rounded border-gray-300 cursor-pointer">
-                <span class="text-sm text-slate-700 select-none">
-                    <strong class="block text-[#008B47] text-base mb-1">Paso obligatorio: Solicitud de permiso</strong>
-                    He leído al cliente el siguiente guion: <br>
-                    <span class="italic text-slate-800 bg-white px-2 py-1 rounded inline-block mt-1 mb-1 border border-slate-200">
-                        "Señor(a) cliente, por políticas de calidad y para tomar mejores notas de nuestros acuerdos, ¿me autoriza grabar esta conversación?"
-                    </span><br>
-                    Y confirmo que <strong>he recibido su autorización</strong> verbal.
-                </span>
+        <div class="consentimiento">
+            <label>
+                <input type="checkbox" id="checkConsentimiento">
+                <span><strong>Aviso Legal:</strong> Confirmo que he informado al cliente que esta llamada está siendo grabada para fines de calidad y transcripción de acuerdos comerciales.</span>
             </label>
         </div>
 
-        <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+        <div class="estado-grabando" id="indicadorGrabando">🔴 Grabando...</div>
+        <div class="tiempo" id="tiempo">00:00</div>
 
-        <!-- Área de Grabación -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 flex flex-col items-center justify-center space-y-8 relative overflow-hidden">
-            
-            <!-- Estado -->
-            <div id="statusIndicator" class="flex items-center gap-2 h-8 hidden">
-                <span class="flex h-3 w-3 relative">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                </span>
-                <span class="text-red-500 font-medium">Grabando</span>
-            </div>
-            
-            <div id="pauseIndicator" class="flex items-center gap-2 h-8 hidden">
-                <span class="text-amber-500 font-medium">En Pausa</span>
-            </div>
-
-            <div id="timerDisplay" class="text-6xl font-light text-slate-800 tracking-wider">00:00</div>
-
-            <!-- Visualizador -->
-            <div class="w-full max-w-md h-24 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 relative">
-                <canvas id="visualizerCanvas" width="400" height="96" class="w-full h-full"></canvas>
-                <div id="visualizerOverlay" class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-                    Visualizador inactivo
-                </div>
-            </div>
-
-            <!-- Controles -->
-            <div class="flex items-center gap-6 mt-4">
-                <button id="btnStart" disabled class="w-20 h-20 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg transition-all opacity-50 cursor-not-allowed" title="Debes aceptar el consentimiento para grabar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-                </button>
-
-                <button id="btnPause" class="hidden w-14 h-14 bg-amber-100 hover:bg-amber-200 text-amber-600 rounded-full flex items-center justify-center transition-all" title="Pausar">
-                    <svg id="iconPause" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                    <svg id="iconResume" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                </button>
-
-                <button id="btnStop" class="hidden w-20 h-20 bg-slate-800 hover:bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-105" title="Detener y Guardar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg>
-                </button>
-            </div>
+        <div class="controles">
+            <button id="btnGrabar" disabled>🎙️ Iniciar Grabación</button>
+            <button id="btnDetener">⏹️ Detener y Guardar</button>
         </div>
 
-        <!-- Lista de Grabaciones -->
-        <div id="recordingsContainer" class="space-y-4 hidden pb-10">
-            <h2 class="text-xl font-semibold text-[#008B47] border-b border-slate-200 pb-2">Archivos Listos para Gemini</h2>
-            <div id="recordingsList" class="grid gap-4"></div>
-        </div>
+        <div class="lista-grabaciones" id="listaGrabaciones">
+            </div>
     </div>
 
     <script>
         let mediaRecorder;
-        let audioChunks = [];
-        let stream;
-        let recordingTime = 0;
-        let timerInterval;
-        let isPaused = false;
-        
-        // Visualizer
-        let audioCtx;
-        let analyser;
-        let source;
-        let animationId;
-        const canvas = document.getElementById('visualizerCanvas');
-        const canvasCtx = canvas.getContext('2d');
+        let trozosAudio = [];
+        let flujoMic;
+        let intervaloTiempo;
+        let segundos = 0;
 
-        // UI Elements
-        const consentCheckbox = document.getElementById('consentCheckbox');
-        const consentCard = document.getElementById('consentCard');
-        const btnStart = document.getElementById('btnStart');
-        const btnPause = document.getElementById('btnPause');
-        const btnStop = document.getElementById('btnStop');
-        const timerDisplay = document.getElementById('timerDisplay');
-        const statusIndicator = document.getElementById('statusIndicator');
-        const pauseIndicator = document.getElementById('pauseIndicator');
-        const visualizerOverlay = document.getElementById('visualizerOverlay');
-        const errorMessage = document.getElementById('errorMessage');
-        const recordingsContainer = document.getElementById('recordingsContainer');
-        const recordingsList = document.getElementById('recordingsList');
-        const iconPause = document.getElementById('iconPause');
-        const iconResume = document.getElementById('iconResume');
+        const btnGrabar = document.getElementById('btnGrabar');
+        const btnDetener = document.getElementById('btnDetener');
+        const checkConsentimiento = document.getElementById('checkConsentimiento');
+        const displayTiempo = document.getElementById('tiempo');
+        const indicadorGrabando = document.getElementById('indicadorGrabando');
+        const listaGrabaciones = document.getElementById('listaGrabaciones');
 
-        // Logica de validación de consentimiento
-        consentCheckbox.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                btnStart.disabled = false;
-                btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
-                btnStart.classList.add('hover:bg-red-600', 'hover:scale-105');
-                btnStart.title = "Iniciar Grabación";
-                consentCard.classList.replace('bg-[#008B47]/5', 'bg-white');
-            } else {
-                btnStart.disabled = true;
-                btnStart.classList.add('opacity-50', 'cursor-not-allowed');
-                btnStart.classList.remove('hover:bg-red-600', 'hover:scale-105');
-                btnStart.title = "Debes aceptar el consentimiento para grabar";
-                consentCard.classList.replace('bg-white', 'bg-[#008B47]/5');
-            }
+        // Habilitar botón solo si hay consentimiento
+        checkConsentimiento.addEventListener('change', function() {
+            btnGrabar.disabled = !this.checked;
         });
 
-        const formatTime = (seconds) => {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        };
+        // Formatear el tiempo a MM:SS
+        function formatearTiempo(segs) {
+            const m = Math.floor(segs / 60).toString().padStart(2, '0');
+            const s = (segs % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
 
-        const setupVisualizer = () => {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 256;
-            source = audioCtx.createMediaStreamSource(stream);
-            source.connect(analyser);
-            drawVisualizer();
-        };
-
-        const drawVisualizer = () => {
-            if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
-            animationId = requestAnimationFrame(drawVisualizer);
-            
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            analyser.getByteFrequencyData(dataArray);
-
-            canvasCtx.fillStyle = '#f3f4f6';
-            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
-
-            const barWidth = (canvas.width / bufferLength) * 2.5;
-            let x = 0;
-
-            for (let i = 0; i < bufferLength; i++) {
-                const barHeight = dataArray[i] / 2;
-                // Color verde corporativo para las ondas
-                canvasCtx.fillStyle = 'rgb(0, 139, 71)';
-                canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                x += barWidth + 1;
-            }
-        };
-
-        const addRecordingToList = (blob, duration) => {
-            const url = URL.createObjectURL(blob);
-            const id = Date.now();
-            const date = new Date().toLocaleString('es-CO');
-            
-            const item = document.createElement('div');
-            item.className = 'bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center gap-4 justify-between border-l-4 border-l-[#008B47]';
-            item.id = `rec-${id}`;
-            
-            item.innerHTML = `
-                <div class="flex items-center gap-4 w-full sm:w-auto">
-                    <div class="w-12 h-12 bg-[#008B47]/10 text-[#008B47] rounded-full flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-800">Reunión con Cliente</h3>
-                        <div class="flex items-center gap-3 text-xs text-slate-500 mt-1">
-                            <span>${formatTime(duration)}</span> • <span>${date}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 w-full sm:w-auto mt-4 sm:mt-0">
-                    <audio src="${url}" controls class="h-10 w-full sm:w-48"></audio>
-                    <a href="${url}" download="Reunion_Cliente_${id}.webm" class="px-4 py-2 bg-[#008B47] text-white hover:bg-[#00743B] rounded-lg transition-colors flex items-center gap-2 text-sm font-medium shadow-sm" title="Descargar archivo">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                        Descargar
-                    </a>
-                </div>
-            `;
-            
-            recordingsList.prepend(item);
-            recordingsContainer.classList.remove('hidden');
-        };
-
-        btnStart.addEventListener('click', async () => {
-            if(!consentCheckbox.checked) return; // Doble validación
-            
-            errorMessage.classList.add('hidden');
+        // Iniciar Grabación (VERSIÓN ULTRA LIGERA)
+        btnGrabar.addEventListener('click', async () => {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-                
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
+                // Configuración para que pese muy poco: Mono (1 canal)
+                flujoMic = await navigator.mediaDevices.getUserMedia({ 
+                    audio: { 
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
 
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) audioChunks.push(e.data);
+                // Comprimir el audio a 16kbps (ideal para voz)
+                const opciones = { audioBitsPerSecond: 16000 };
+                mediaRecorder = new MediaRecorder(flujoMic, opciones);
+                trozosAudio = [];
+
+                mediaRecorder.ondataavailable = (evento) => {
+                    if (evento.data.size > 0) {
+                        trozosAudio.push(evento.data);
+                    }
                 };
 
                 mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    addRecordingToList(audioBlob, recordingTime);
-                    recordingTime = 0;
-                    timerDisplay.textContent = '00:00';
-                    stream.getTracks().forEach(track => track.stop());
+                    // Se crea el archivo webm (mucho más liviano que mp3 y aceptado por Gemini)
+                    const audioBlob = new Blob(trozosAudio, { type: 'audio/webm' });
+                    crearElementoDescarga(audioBlob);
                     
-                    // Resetear el checkbox para la próxima reunión
-                    consentCheckbox.checked = false;
-                    consentCheckbox.dispatchEvent(new Event('change'));
+                    // Apagar micrófono
+                    flujoMic.getTracks().forEach(track => track.stop());
+                    
+                    // Reiniciar interfaz
+                    clearInterval(intervaloTiempo);
+                    segundos = 0;
+                    displayTiempo.textContent = "00:00";
+                    btnGrabar.style.display = 'inline-block';
+                    btnDetener.style.display = 'none';
+                    indicadorGrabando.style.display = 'none';
+                    checkConsentimiento.checked = false;
+                    btnGrabar.disabled = true;
                 };
 
-                mediaRecorder.start(1000);
+                mediaRecorder.start();
                 
-                btnStart.classList.add('hidden');
-                btnPause.classList.remove('hidden');
-                btnStop.classList.remove('hidden');
-                statusIndicator.classList.remove('hidden');
-                visualizerOverlay.classList.add('hidden');
-                btnStart.classList.add('pulse');
+                // Cambiar interfaz
+                btnGrabar.style.display = 'none';
+                btnDetener.style.display = 'inline-block';
+                indicadorGrabando.style.display = 'block';
 
-                setupVisualizer();
-                
-                timerInterval = setInterval(() => {
-                    recordingTime++;
-                    timerDisplay.textContent = formatTime(recordingTime);
+                // Iniciar cronómetro
+                intervaloTiempo = setInterval(() => {
+                    segundos++;
+                    displayTiempo.textContent = formatearTiempo(segundos);
                 }, 1000);
 
-            } catch (err) {
-                console.error("Error micrófono:", err);
-                errorMessage.textContent = "No se pudo acceder al micrófono. Por favor, asegúrate de dar permisos en tu navegador.";
-                errorMessage.classList.remove('hidden');
+            } catch (error) {
+                alert("Error al acceder al micrófono. Por favor permite el acceso en tu navegador.");
+                console.error(error);
             }
         });
 
-        btnPause.addEventListener('click', () => {
-            if (mediaRecorder.state === 'recording') {
-                mediaRecorder.pause();
-                clearInterval(timerInterval);
-                statusIndicator.classList.add('hidden');
-                pauseIndicator.classList.remove('hidden');
-                iconPause.classList.add('hidden');
-                iconResume.classList.remove('hidden');
-            } else if (mediaRecorder.state === 'paused') {
-                mediaRecorder.resume();
-                timerInterval = setInterval(() => {
-                    recordingTime++;
-                    timerDisplay.textContent = formatTime(recordingTime);
-                }, 1000);
-                statusIndicator.classList.remove('hidden');
-                pauseIndicator.classList.add('hidden');
-                iconPause.classList.remove('hidden');
-                iconResume.classList.add('hidden');
-            }
-        });
-
-        btnStop.addEventListener('click', () => {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        // Detener Grabación
+        btnDetener.addEventListener('click', () => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
                 mediaRecorder.stop();
-                clearInterval(timerInterval);
-                cancelAnimationFrame(animationId);
-                
-                canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-                canvasCtx.fillStyle = '#f3f4f6';
-                canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
-
-                btnStart.classList.remove('hidden', 'pulse');
-                btnPause.classList.add('hidden');
-                btnStop.classList.add('hidden');
-                statusIndicator.classList.add('hidden');
-                pauseIndicator.classList.add('hidden');
-                visualizerOverlay.classList.remove('hidden');
-                
-                iconPause.classList.remove('hidden');
-                iconResume.classList.add('hidden');
             }
         });
+
+        // Crear la tarjeta de descarga
+        function crearElementoDescarga(blob) {
+            const url = URL.createObjectURL(blob);
+            const fecha = new Date();
+            const nombreArchivo = `Acuerdo_Comercial_${fecha.getDate()}-${fecha.getMonth()+1}_${fecha.getHours()}-${fecha.getMinutes()}.webm`;
+
+            const item = document.createElement('div');
+            item.className = 'item-grabacion';
+
+            const titulo = document.createElement('strong');
+            titulo.textContent = `Grabación finalizada (${formatearTiempo(segundos)})`;
+
+            const audioEl = document.createElement('audio');
+            audioEl.controls = true;
+            audioEl.src = url;
+
+            const linkDescarga = document.createElement('a');
+            linkDescarga.href = url;
+            linkDescarga.download = nombreArchivo;
+            linkDescarga.className = 'btn-descargar';
+            linkDescarga.textContent = '📥 Descargar Audio Ligero para Gemini';
+
+            item.appendChild(titulo);
+            item.appendChild(audioEl);
+            item.appendChild(linkDescarga);
+
+            listaGrabaciones.prepend(item);
+        }
     </script>
 </body>
 </html>
